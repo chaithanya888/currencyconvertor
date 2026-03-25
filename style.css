@@ -1,0 +1,451 @@
+/* ============================================================
+   CURRENCY CONVERTER — LUXURY PRIVATE BANKING THEME
+   Designer: Senior Frontend — Money Aesthetic
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── Design Tokens ── */
+:root {
+  --gold-light:    #F5D98B;
+  --gold-mid:      #C9A84C;
+  --gold-deep:     #9A7230;
+  --gold-shine:    #FFE59A;
+  --obsidian:      #080C12;
+  --navy-deep:     #0B1120;
+  --navy-mid:      #111827;
+  --navy-card:     #141E30;
+  --navy-border:   #1E2D45;
+  --glass-bg:      rgba(20, 30, 48, 0.72);
+  --glass-border:  rgba(201, 168, 76, 0.25);
+  --text-primary:  #F0E6C8;
+  --text-muted:    #8A9BB5;
+  --text-dim:      #4A5C74;
+  --success:       #2ECC8F;
+  --radius-card:   24px;
+  --radius-input:  14px;
+  --transition:    0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Body — Rich Background ── */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 48px;
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--obsidian);
+  background-image:
+    /* Gold radial glow top-left */
+    radial-gradient(ellipse 70% 55% at 15% 10%, rgba(201,168,76,0.12) 0%, transparent 70%),
+    /* Subtle blue glow bottom-right */
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(30,60,120,0.25) 0%, transparent 65%),
+    /* Fine grid lines */
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  overflow-x: hidden;
+}
+
+/* ── Floating decorative ₿ / $ symbols ── */
+body::before,
+body::after {
+  content: '$';
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(120px, 20vw, 280px);
+  font-weight: 800;
+  color: rgba(201, 168, 76, 0.04);
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+body::before { top: -40px;  left: -30px;  }
+body::after  { bottom: -60px; right: -20px; content: '₹'; transform: rotate(15deg); }
+
+/* ── Page Title ── */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-align: center;
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 1;
+
+  /* Gold gradient text */
+  background: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold-mid) 45%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Entrance animation */
+  animation: fadeSlideDown 0.8s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* Decorative underline beneath h1 */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
+  margin: 10px auto 0;
+}
+
+/* ── Main Card ── */
+.box {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  padding: clamp(28px, 5vw, 44px) clamp(24px, 5vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /* Glassmorphism backdrop */
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+
+  /* Layered shadows — depth + gold glow */
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.08),
+    0 4px 24px rgba(0,0,0,0.55),
+    0 0 80px rgba(201,168,76,0.07),
+    inset 0 1px 0 rgba(245,217,139,0.12);
+
+  animation: fadeSlideUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.1s both;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.box:hover {
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.18),
+    0 8px 40px rgba(0,0,0,0.65),
+    0 0 100px rgba(201,168,76,0.12),
+    inset 0 1px 0 rgba(245,217,139,0.18);
+  transform: translateY(-2px);
+}
+
+/* Shimmering top border accent */
+.box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--gold-mid), transparent 50%, var(--gold-deep));
+  /*-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);**/
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ── Amount Input ── */
+#Amount {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(8, 12, 18, 0.6);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-input);
+  outline: none;
+  letter-spacing: 0.02em;
+  caret-color: var(--gold-mid);
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+#Amount::placeholder {
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+#Amount:focus {
+  border-color: var(--gold-mid);
+  background: rgba(8, 12, 18, 0.85);
+  box-shadow:
+    0 0 0 3px rgba(201,168,76,0.15),
+    0 0 20px rgba(201,168,76,0.08);
+}
+
+/* ── "To" Label ── */
+.box h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.box h2::before,
+.box h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--navy-border), transparent);
+}
+
+/* ── Select Dropdowns ── */
+select {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--gold-light);
+  background: rgba(8, 12, 18, 0.7);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-input);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  letter-spacing: 0.08em;
+
+  /* Custom gold chevron arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 44px;
+
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+select:focus,
+select:hover {
+  border-color: var(--gold-mid);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+
+select option {
+  background: var(--navy-mid);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ── Convert Button ── */
+#btn {
+  width: 100%;
+  padding: 17px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy-deep);
+  border: none;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  /* Liquid gold gradient */
+  background: linear-gradient(135deg, #F5D98B 0%, #C9A84C 40%, #9A7230 70%, #C9A84C 100%);
+  background-size: 200% 200%;
+
+  box-shadow:
+    0 4px 20px rgba(201,168,76,0.35),
+    0 1px 0 rgba(255,255,200,0.3) inset;
+
+  transition: all var(--transition);
+  animation: gradientShift 4s ease infinite;
+}
+
+/* Shimmer sweep on hover */
+#btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+}
+
+#btn:hover::before {
+  transform: translateX(100%);
+}
+
+#btn:hover {
+  background-position: right center;
+  box-shadow:
+    0 6px 32px rgba(201,168,76,0.5),
+    0 1px 0 rgba(255,255,200,0.4) inset;
+  transform: translateY(-2px);
+  letter-spacing: 0.16em;
+}
+
+#btn:active {
+  transform: translateY(0px) scale(0.98);
+  box-shadow: 0 2px 10px rgba(201,168,76,0.3);
+}
+
+/* ── Output Result Card ── */
+.output {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  min-height: 80px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: fadeSlideUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.2s both;
+}
+
+/* Only styled when it has content */
+.output:not(:empty) {
+  background: rgba(8, 12, 18, 0.55);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--radius-card);
+  padding: 28px 36px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.06),
+    0 4px 32px rgba(0,0,0,0.45),
+    0 0 60px rgba(201,168,76,0.06);
+  animation: resultPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Green accent bar on left of result */
+.output:not(:empty)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--gold-mid), var(--success));
+}
+
+/* ── h4 result text ── */
+.output h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold-mid) 55%, var(--text-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+/* ── Keyframe Animations ── */
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-22px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px);  }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes resultPop {
+  from { opacity: 0; transform: scale(0.88) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ── Responsive — Tablet ── */
+@media (max-width: 600px) {
+  body {
+    padding: 20px 12px 40px;
+  }
+
+  .box {
+    padding: 28px 20px;
+    gap: 16px;
+    border-radius: 20px;
+  }
+
+  h1 {
+    margin-bottom: 28px;
+  }
+
+  #Amount {
+    font-size: 1.25rem;
+    padding: 14px 16px;
+  }
+
+  select {
+    padding: 13px 40px 13px 15px;
+    font-size: 0.9rem;
+  }
+
+  #btn {
+    padding: 15px 20px;
+    font-size: 0.95rem;
+  }
+
+  .output:not(:empty) {
+    padding: 22px 24px;
+  }
+}
+
+/* ── Responsive — Small Mobile ── */
+@media (max-width: 380px) {
+  .box {
+    padding: 22px 16px;
+  }
+
+  #Amount {
+    font-size: 1.1rem;
+  }
+
+  .output h4 {
+    font-size: 1.4rem;
+  }
+}
+
+/* ── Scrollbar Styling ── */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--obsidian); }
+::-webkit-scrollbar-thumb  { background: var(--gold-deep); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-mid); }
+
+/* ── Text Selection ── */
+::selection {
+  background: rgba(201, 168, 76, 0.28);
+  color: var(--gold-shine);
+}
